@@ -40,6 +40,7 @@ async function run() {
     await client.connect();
     const productCollection = client.db('carWhisperer').collection('product');
     const userCollection = client.db('carWhisperer').collection('users');
+    const reviewCollection = client.db('carWhisperer').collection('review');
 
     const verifyAdmin = async (req, res, next) => {
       const requester = req.decoded.email;
@@ -104,6 +105,12 @@ async function run() {
         { expiresIn: '1h' }
       );
       res.send({ result, token });
+    });
+
+    app.post('/review', async (req, res) => {
+      const review = req.body;
+      const result = await reviewCollection.insertOne(review);
+      res.send(result);
     });
   } finally {
   }
